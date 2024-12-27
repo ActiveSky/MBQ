@@ -4,7 +4,7 @@
 
 1. Clone this repo
     ```bash
-    git clone --recurse-submodules git@github.com:LSY-noya/qmllm.git
+    git clone --recurse-submodules git@github.com:thu-nics/MBQ.git
     ```
 
 2. Create a conda env
@@ -27,7 +27,7 @@
     pip install -e .
     ```
 
-## Apply model quantization in qmllm
+## Apply model quantization in `qmllm` package
 ### Command-line Interface 
 
 Quantization search for MLLMs is executed based on `main_quant.py`. A variety of arguments are available to configure the quantization search process. We also support using YAML files for parameter configuration, you can refer to [yaml configs](./configs) to directly use and adjust parameters, or create your own custom configuration.

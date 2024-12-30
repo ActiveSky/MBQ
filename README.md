@@ -1,4 +1,4 @@
-# MBQ: Modality-Balanced Quantization for Large Vision-Language Models
+# MBQ: Modality-Balanced Quantization for Large Vision-Language Models [[paper]](https://arxiv.org/abs/2412.19509)
 
 ## Installation
 
@@ -152,6 +152,18 @@ Quantization search for MLLMs is executed based on `main_quant.py`. A variety of
         --scale_path "scale_cache/mbq/internvl2_w4a8.pt"
     ```
 
+## Citation
+```
+@misc{li2024mbq,
+      title={MBQ: Modality-Balanced Quantization for Large Vision-Language Models}, 
+      author={Shiyao Li and Yingchun Hu and Xuefei Ning and Xihui Liu and Ke Hong and Xiaotao Jia and Xiuhong Li and Yaqi Yan and Pei Ran and Guohao Dai and Shengen Yan and Huazhong Yang and Yu Wang},
+      year={2024},
+      eprint={2412.19509},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2412.19509}, 
+}
+```
 
 ## Contact Us
 

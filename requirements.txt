@@ -6,7 +6,7 @@ anthropic
 
 # huggingface requirements
 accelerate>=0.21.0
-transformers==4.44.2
+transformers==4.45.0
 datasets
 evaluate
 
@@ -37,3 +37,5 @@ triton>=2.1.0
 
 decord
 easydict
+imageio
+qwen-vl-utils

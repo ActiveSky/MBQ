@@ -1,6 +1,6 @@
 # model args
 model: qwen2_vl
-model_args: pretrained="Qwen/Qwen2-VL-7B-Instruct"
+model_args: pretrained=Qwen/Qwen2-VL-7B-Instruct
 
 # calibration data args
 calib_data: coco

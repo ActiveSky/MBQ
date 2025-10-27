@@ -127,51 +127,6 @@ def parse_quant_args() -> argparse.Namespace:
     args = parser.parse_args()
     return args
 
-
-def cli_quant(args: Union[argparse.Namespace, None] = None) -> None:
-    """
-    量化过程的主CLI入口函数
-
-    该函数处理命令行参数或配置文件，并为每个配置执行单次量化过程。
-    支持通过YAML配置文件指定多个实验配置。
-
-    参数:
-        args (Union[argparse.Namespace, None]): 命令行参数对象。如果为None，则通过parse_quant_args()解析命令行参数。
-
-    异常:
-        ValueError: 当指定的配置文件不存在时抛出
-    """
-    if not args:
-        # 如果没有提供参数，则解析命令行参数
-        args = parse_quant_args()
-
-    args_list = []
-    if args.config:
-        # 如果指定了配置文件，则从配置文件加载参数
-        if not os.path.exists(args.config):
-            raise ValueError(f"Config file does not exist: {args.config}")
-
-        with open(args.config, "r") as file:
-            config_args = yaml.safe_load(file)
-        # 确保config_args是列表格式
-        config_args = [config_args] if type(config_args) != list else config_args
-        # 处理多个配置，为每个配置创建参数列表
-        for config in config_args:
-            # 复制基础参数
-            args_copy = argparse.Namespace(**vars(args))
-            # 用配置文件中的参数覆盖基础参数
-            for key, value in config.items():
-                setattr(args_copy, key, value)
-            args_list.append(args_copy)
-    else:
-        # 如果没有指定配置文件，则直接使用传入的参数
-        args_list.append(args)
-
-    # 为每个参数配置执行单次量化过程
-    for args in args_list:
-        cli_quant_single(args)
-
-
 def cli_quant_single(args: Union[argparse.Namespace, None] = None) -> None:
     """
     执行单次量化过程的核心函数
@@ -226,6 +181,51 @@ def cli_quant_single(args: Union[argparse.Namespace, None] = None) -> None:
     # 包装量化模型并执行量化过程
     qwrapper(process_model, prompt_inputs, prompt_kwargs, args)
 
-    
+def cli_quant(args: Union[argparse.Namespace, None] = None) -> None:
+    """
+    量化过程的主CLI入口函数
+
+    该函数处理命令行参数或配置文件，并为每个配置执行单次量化过程。
+    支持通过YAML配置文件指定多个实验配置。
+
+    参数:
+        args (Union[argparse.Namespace, None]): 命令行参数对象。如果为None，则通过parse_quant_args()解析命令行参数。
+
+    异常:
+        ValueError: 当指定的配置文件不存在时抛出
+    """
+    if not args:
+        # 如果没有提供参数，则解析命令行参数
+        args = parse_quant_args()
+
+    args_list = []
+    if args.config:
+        # 如果指定了配置文件，则从配置文件加载参数
+        if not os.path.exists(args.config):
+            raise ValueError(f"Config file does not exist: {args.config}")
+
+        with open(args.config, "r") as file:
+            config_args = yaml.safe_load(file)
+        # 确保config_args是列表格式
+        config_args = [config_args] if type(config_args) != list else config_args
+        # 处理多个配置，为每个配置创建参数列表
+        for config in config_args:
+            # 复制基础参数
+            args_copy = argparse.Namespace(**vars(args))
+            # 用配置文件中的参数覆盖基础参数
+            for key, value in config.items():
+                setattr(args_copy, key, value)
+            args_list.append(args_copy)
+    else:
+        # 如果没有指定配置文件，则直接使用传入的参数
+        args_list.append(args)
+
+    # 为每个参数配置执行单次量化过程
+    for args in args_list:
+        cli_quant_single(args)
+
+
+
+
 if __name__ == "__main__":
     cli_quant()

@@ -144,6 +144,23 @@ def cli_quant_single(args: Union[argparse.Namespace, None] = None) -> None:
     if args.model_args is None:
         args.model_args = ""
 
+    # ==================新增的兼容代码====================
+    # 解析 model_args 字符串，并处理 pretrained 参数
+    model_args_dict = {}
+    if args.model_args:
+        for arg_pair in args.model_args.split(","):
+            if "=" in arg_pair:
+                key, value = arg_pair.split("=", 1)
+                # 去除 pretrained 参数值两端的引号
+                if key.strip() == "pretrained":
+                    value = value.strip().strip('"')
+                model_args_dict[key.strip()] = value.strip()
+    
+    # 重新构造 model_args 字符串
+    reconstructed_model_args = ",".join([f"{k}={v}" for k, v in model_args_dict.items()])
+    args.model_args = reconstructed_model_args
+    # ====================新增的兼容代码=======================
+
     # 获取模型类并创建模型实例
     ModelClass = get_model(args.model)  # 加载模型类
     lm = ModelClass.create_from_arg_string(

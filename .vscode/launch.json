@@ -1,0 +1,24 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Debug my_script with custom args", // 给配置起一个描述性的名字
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/main_quant.py", // 明确指定要调试的脚本路径
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "args": [
+                "--config", "configs/internvl2/MBQ_search/8b_weight_only.yaml",
+            ]
+        },
+        {
+            "name": "Python: Current File", // 这是VS Code默认创建的，不做修改
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        }
+    ]
+}

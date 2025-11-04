@@ -1,3 +1,4 @@
-from a import print_hello
+a=0
+assert a==1, "a不等于1"
 
-print_hello()
+print("hello world")

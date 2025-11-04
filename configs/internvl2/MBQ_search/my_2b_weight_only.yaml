@@ -21,4 +21,4 @@ reweight: True # if True, use avg gradient to reweight the loss of each modality
 loss_mode: mae 
 
 # output args
-scale_path: scale_cache/mbq/internvl2_1b_w3g128.pt
+scale_path: scale_cache/mbq/internvl2_2b_w3g128.pt

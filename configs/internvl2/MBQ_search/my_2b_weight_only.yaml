@@ -1,6 +1,6 @@
 # model args
 model: internvl2
-model_args: pretrained="OpenGVLab/InternVL2-1B"
+model_args: pretrained="OpenGVLab/InternVL2-2B"
 
 # calibration data args
 calib_data: coco

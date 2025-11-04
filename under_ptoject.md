@@ -150,3 +150,98 @@ MBQ results saved at scale_cache/mbq/internvl2_8b_w3g128.pt
 *   **`pseudo_quantize_model_weight(_act)` (伪量化)** 解决了**精度损失模拟**的问题。它通过模拟低比特的离散化过程，将量化固有的误差引入到模型中，从而评估模型在低精度下的实际性能。
 
 简而言之，`apply_mbq` 是对浮点权重的**预处理**，使其更适合量化；而 `pseudo_quantize_model_weight(_act)` 则是对这些预处理后的权重进行**低比特量化效果的模拟**。两者结合，才能完整地实现一个既考虑了尺度匹配又模拟了精度损失的伪量化模型。
+
+## 模型结构分析
+
+```py
+print(process_model.model)
+
+```
+
+
+```txt
+
+print(process_model.model)
+InternVLChatModel(
+  (vision_model): InternVisionModel(
+    (embeddings): InternVisionEmbeddings(
+      (patch_embedding): Conv2d(3, 1024, kernel_size=(14, 14), stride=(14, 14))
+    )
+    (encoder): InternVisionEncoder(
+      (layers): ModuleList(
+        (0-23): 24 x InternVisionEncoderLayer(
+          (attn): InternAttention(
+            (qkv): Linear(in_features=1024, out_features=3072, bias=True)
+            (attn_drop): Dropout(p=0.0, inplace=False)
+            (proj_drop): Dropout(p=0.0, inplace=False)
+            (proj): Linear(in_features=1024, out_features=1024, bias=True)
+          )
+          (mlp): InternMLP(
+            (act): GELUActivation()
+            (fc1): Linear(in_features=1024, out_features=4096, bias=True)
+            (fc2): Linear(in_features=4096, out_features=1024, bias=True)
+          )
+          (norm1): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+          (norm2): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+          (drop_path1): Identity()
+          (drop_path2): Identity()
+        )
+      )
+    )
+  )
+  (language_model): InternLM2ForCausalLM(
+    (model): InternLM2Model(
+      (tok_embeddings): Embedding(92553, 4096, padding_idx=2)
+      (layers): ModuleList(
+        (0-31): 32 x InternLM2DecoderLayer(
+          (attention): InternLM2Attention(
+            (wqkv): Linear(in_features=4096, out_features=6144, bias=False)
+            (wo): Linear(in_features=4096, out_features=4096, bias=False)
+            (rotary_emb): InternLM2DynamicNTKScalingRotaryEmbedding()
+          )
+          (feed_forward): InternLM2MLP(
+            (w1): Linear(in_features=4096, out_features=14336, bias=False)
+            (w3): Linear(in_features=4096, out_features=14336, bias=False)
+            (w2): Linear(in_features=14336, out_features=4096, bias=False)
+            (act_fn): SiLU()
+          )
+          (attention_norm): InternLM2RMSNorm()
+          (ffn_norm): InternLM2RMSNorm()
+        )
+      )
+      (norm): InternLM2RMSNorm()
+    )
+    (output): Linear(in_features=4096, out_features=92553, bias=False)
+  )
+  (mlp1): Sequential(
+    (0): LayerNorm((4096,), eps=1e-05, elementwise_affine=True)
+    (1): Linear(in_features=4096, out_features=4096, bias=True)
+    (2): GELU(approximate='none')
+    (3): Linear(in_features=4096, out_features=4096, bias=True)
+  )
+)
+
+```
+
+
+```txt
+print(layers)
+ModuleList(
+  (0-31): 32 x InternLM2DecoderLayer(
+    (attention): InternLM2Attention(
+      (wqkv): Linear(in_features=4096, out_features=6144, bias=False)
+      (wo): Linear(in_features=4096, out_features=4096, bias=False)
+      (rotary_emb): InternLM2DynamicNTKScalingRotaryEmbedding()
+    )
+    (feed_forward): InternLM2MLP(
+      (w1): Linear(in_features=4096, out_features=14336, bias=False)
+      (w3): Linear(in_features=4096, out_features=14336, bias=False)
+      (w2): Linear(in_features=14336, out_features=4096, bias=False)
+      (act_fn): SiLU()
+    )
+    (attention_norm): InternLM2RMSNorm()
+    (ffn_norm): InternLM2RMSNorm()
+  )
+)
+```
+![alt text](./assets/image.png)
